@@ -12,9 +12,9 @@ engine = create_engine(DATABASE_URL)
 graduation_model = joblib.load('student_graduation_model.pkl')
 achievement_model = joblib.load('student_achievement_model.pkl')
 
-def convert_grade_to_score(grade):
-    grade_dict = {'A': 4.0, 'B': 3.0, 'C': 2.0, 'D': 1.0, 'E': 0.0}
-    return grade_dict.get(grade, None)
+# def convert_grade_to_score(grade):
+#     grade_dict = {'A': 4.0, 'B': 3.0, 'C': 2.0, 'D': 1.0, 'E': 0.0}
+#     return grade_dict.get(grade, None)
 
 def get_student_data(npm):
     try:
@@ -113,6 +113,7 @@ def predict_student_status():
             """)
             activity_list = [dict(row._mapping) for row in connection.execute(activities_query, {"npm": npm})]
 
+        prestasi = 'Berprestasi' if float(achievement_prob) == 100 else 'Belum Berprestasi'
         # Kembalikan hasil prediksi
         return jsonify({
             "npm_mahasiswa": npm,
@@ -123,6 +124,7 @@ def predict_student_status():
             "ipk_mahasiswa": float(ipk_mahasiswa),
             "persentase_kelulusan": float(graduation_prob),
             "persentase_berprestasi": float(achievement_prob),
+            'kategori_berprestasi' : prestasi,
             "keterlibatan_kegiatan": int(keterlibatan_kegiatan),
              "daftar_mata_kuliah": course_list,
             "daftar_kegiatan": activity_list,
