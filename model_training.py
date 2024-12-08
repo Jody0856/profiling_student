@@ -30,10 +30,10 @@ def load_and_clean_data():
         """, engine)
         data_kegiatan_mahasiswa = pd.read_sql("""SELECT a.*,
              CASE 
-                    WHEN tingkat_kegiatan = 'international' THEN 4.0
-                    WHEN tingkat_kegiatan = 'national' THEN 3.0
-                    WHEN tingkat_kegiatan = 'provinsi' THEN 2.0
-                    WHEN tingkat_kegiatan = 'lokal' THEN 1.0
+                    WHEN tingkat_kegiatan = 'international' THEN 10
+                    WHEN tingkat_kegiatan = 'national' THEN 8
+                    WHEN tingkat_kegiatan = 'provinsi' THEN 5
+                    WHEN tingkat_kegiatan = 'lokal' THEN 5
                 END AS bobot_kegiatan 
         FROM data_kegiatan_mahasiswa a""", engine)
 
@@ -44,13 +44,25 @@ def load_and_clean_data():
 
         # Hitung keterlibatan kegiatan
         data_kegiatan_mahasiswa['keterlibatan_kegiatan'] = data_kegiatan_mahasiswa.groupby('npm_mahasiswa')['npm_mahasiswa'].transform('count')
-        data_kegiatan_mahasiswa = data_kegiatan_mahasiswa[['npm_mahasiswa', 'keterlibatan_kegiatan']].drop_duplicates()
+        data_kegiatan_mahasiswa['total_bobot'] = data_kegiatan_mahasiswa.groupby('npm_mahasiswa')['bobot_kegiatan'].transform('sum')
+        
+        # Periksa apakah kolom total_bobot ada
+        print("Cek kolom total_bobot di data_kegiatan_mahasiswa:")
+        print(data_kegiatan_mahasiswa[['npm_mahasiswa', 'keterlibatan_kegiatan', 'bobot_kegiatan', 'total_bobot']].head())
+
+        data_kegiatan_mahasiswa = data_kegiatan_mahasiswa[['npm_mahasiswa', 'keterlibatan_kegiatan','bobot_kegiatan', 'total_bobot']].drop_duplicates()
 
         # Merge data
         merged_data = pd.merge(data_mahasiswa, data_krs_mahasiswa, on="npm_mahasiswa", how="inner")
         merged_data = pd.merge(merged_data, data_kegiatan_mahasiswa, on="npm_mahasiswa", how="left")
-        merged_data['keterlibatan_kegiatan'].fillna(0, inplace=True)
+        
+        # Periksa apakah kolom total_bobot ada setelah merge
+        print("Cek kolom setelah merge:")
+        print(merged_data.columns)
 
+        merged_data['keterlibatan_kegiatan'].fillna(0, inplace=True)
+        merged_data['total_bobot'].fillna(0, inplace=True)
+        
         # Tambahkan rata-rata nilai dan IPK
         merged_data['nilai_rata_rata'] = merged_data.groupby('npm_mahasiswa')['nilai'].transform('mean')
         merged_data['ipk_mahasiswa'].fillna(0, inplace=True)
@@ -90,13 +102,19 @@ def train_and_export_models(merged_data):
         else:
             return 0.0  # Mahasiswa yang tidak aktif atau lainnya, 0% kelulusan
 
+    def achievement_label(row):
+        # Menghindari pembagian dengan nol
+        #if row['keterlibatan_kegiatan'] == 0:
+        #    return 0.0  # Jika tidak ada keterlibatan kegiatan, beri skor prestasi 0
+        score = (row['total_bobot'] > 60) if row['keterlibatan_kegiatan'] > 0 else 0
+        return np.clip(score, 0, 1)  # Skor prestasi
+    
     merged_data['graduation_probability'] = merged_data.apply(graduation_probability, axis=1)
     y_graduation = merged_data['graduation_probability']
 
     # Label prestasi (tugas klasifikasi)
-    y_achievement = merged_data.apply(
-        lambda row: 1 if row['ipk_mahasiswa'] >= 3.5 and row['nilai_rata_rata'] >= 3.5 and row['keterlibatan_kegiatan'] > 0 else 0, axis=1
-    )
+    merged_data['achievement'] = merged_data.apply(achievement_label, axis=1)
+    y_achievement = merged_data['achievement']
 
     # Model kelulusan (regresi)
     X_train_grad, X_test_grad, y_train_grad, y_test_grad = train_test_split(
