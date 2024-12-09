@@ -3,9 +3,10 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.exc import SQLAlchemyError  # Untuk menangani error SQLAlchemy
 import joblib
 import numpy as np
+from flask_cors import CORS  # Import library flask-cors
 
 app = Flask(__name__)
-
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})  # Middleware CORS
 DATABASE_URL = "mysql+pymysql://root:@localhost:3306/profiling_students"  # Ganti dengan kredensial database Anda
 engine = create_engine(DATABASE_URL)
 
@@ -144,7 +145,7 @@ def list_students():
         with engine.connect() as connection:
             query = text("""
                 SELECT npm_mahasiswa, nama_mahasiswa, prodi_mahasiswa,status_mahasiswa, ipk_mahasiswa
-                FROM data_mahasiswa
+                FROM data_mahasiswa where status_mahasiswa in ('Aktif','Lulus')
             """)
             result = connection.execute(query).mappings()
 
