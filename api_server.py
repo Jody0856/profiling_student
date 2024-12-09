@@ -84,7 +84,7 @@ def predict_student_status():
 
         # Prediksi peluang berprestasi
         X_new_achievement = np.array([[ipk_mahasiswa, nilai_rata_rata, keterlibatan_kegiatan]])  # Sesuaikan jumlah fitur
-        achievement_prob = achievement_model.predict_proba(X_new_achievement)[0][1] * 100
+        achievement_prob = achievement_model.predict_proba(X_new_achievement)[0][1]
 
         # Mengambil data mata kuliah mahasiswa
         with engine.connect() as connection:
@@ -113,7 +113,7 @@ def predict_student_status():
             """)
             activity_list = [dict(row._mapping) for row in connection.execute(activities_query, {"npm": npm})]
 
-        prestasi = 'Berprestasi' if float(achievement_prob) == 100 else 'Belum Berprestasi'
+        prestasi = 'Berprestasi' if int(achievement_prob) == 1 else 'Belum Berprestasi'
         # Kembalikan hasil prediksi
         return jsonify({
             "npm_mahasiswa": npm,
@@ -123,7 +123,7 @@ def predict_student_status():
             'nilai_rata_rata': student_data['nilai_rata_rata'],
             "ipk_mahasiswa": float(ipk_mahasiswa),
             "persentase_kelulusan": float(graduation_prob),
-            "persentase_berprestasi": float(achievement_prob),
+           # "persentase_berprestasi": int(achievement_prob),
             'kategori_berprestasi' : prestasi,
             "keterlibatan_kegiatan": int(keterlibatan_kegiatan),
              "daftar_mata_kuliah": course_list,
