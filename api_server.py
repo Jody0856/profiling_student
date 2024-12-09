@@ -145,7 +145,7 @@ def list_students():
         with engine.connect() as connection:
             query = text("""
                 SELECT npm_mahasiswa, nama_mahasiswa, prodi_mahasiswa,status_mahasiswa, ipk_mahasiswa
-                FROM data_mahasiswa where status_mahasiswa in ('Aktif','Lulus')
+                FROM data_mahasiswa
             """)
             result = connection.execute(query).mappings()
 
