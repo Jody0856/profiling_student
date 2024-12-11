@@ -114,7 +114,7 @@ def predict_student_status():
             """)
             activity_list = [dict(row._mapping) for row in connection.execute(activities_query, {"npm": npm})]
 
-        prestasi = 'Berprestasi' if int(achievement_prob) == 1 else 'Belum Berprestasi'
+        kategori = 'Partisipan mahasiswa bagus' if int(achievement_prob) == 1 else 'Partisipan mahasiswa kurang'
         # Kembalikan hasil prediksi
         return jsonify({
             "npm_mahasiswa": npm,
@@ -124,8 +124,7 @@ def predict_student_status():
             'nilai_rata_rata': student_data['nilai_rata_rata'],
             "ipk_mahasiswa": float(ipk_mahasiswa),
             "persentase_kelulusan": float(graduation_prob),
-           # "persentase_berprestasi": int(achievement_prob),
-            'kategori_berprestasi' : prestasi,
+            'kategori_mahasiswa' : kategori,
             "keterlibatan_kegiatan": int(keterlibatan_kegiatan),
              "daftar_mata_kuliah": course_list,
             "daftar_kegiatan": activity_list,
