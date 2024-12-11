@@ -114,7 +114,7 @@ def predict_student_status():
             """)
             activity_list = [dict(row._mapping) for row in connection.execute(activities_query, {"npm": npm})]
 
-        kategori = 'Partisipan mahasiswa bagus' if int(achievement_prob) == 1 else 'Partisipan mahasiswa kurang'
+        kategori = 'Memenuhi Standar' if int(achievement_prob) == 1 else 'Butuh Peningkatan'
         # Kembalikan hasil prediksi
         return jsonify({
             "npm_mahasiswa": npm,
