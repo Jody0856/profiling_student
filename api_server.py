@@ -7,7 +7,8 @@ from flask_cors import CORS  # Import library flask-cors
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})  # Middleware CORS
-DATABASE_URL = "mysql+pymysql://root:@localhost:3306/profiling_students"  # Ganti dengan kredensial database Anda
+#DATABASE_URL = "mysql+pymysql://root:@localhost:3306/profiling_students"  # Ganti dengan kredensial database Anda
+DATABASE_URL = "mysql+pymysql://sql12751805:ZH2fxiyYlb@sql12.freesqldatabase.com:3306/sql12751805"  # Ganti dengan kredensial database Anda
 engine = create_engine(DATABASE_URL)
 
 graduation_model = joblib.load('student_graduation_model.pkl')
