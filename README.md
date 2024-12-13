@@ -14,3 +14,6 @@ membuat dan mengimpor database:
 - endpoint ada 2 yaitu: /students atau http://localhost:8000/students untuk dapatkan list semua mahasiswa
 - /predict atau http://localhost:8000/predict untuk profiling mahasiswa, diharapkan agar mengirimkan parameter NPM dengan metode post
 - pip install pandas scikit-learn fastapi uvicorn joblib openpyxl flask sqlalchemy
+
+atau dengan ini
+- pip install -r requirements.txt
