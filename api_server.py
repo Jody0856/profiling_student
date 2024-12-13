@@ -6,7 +6,8 @@ import numpy as np
 from flask_cors import CORS  # Import library flask-cors
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})  # Middleware CORS
+#update untuk cors yg diperbolehkn
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://profiler-student-frontend.vercel.app"]}})
 #DATABASE_URL = "mysql+pymysql://root:@localhost:3306/profiling_students"  # Ganti dengan kredensial database Anda
 #DATABASE_URL = "mysql+pymysql://sql12751805:ZH2fxiyYlb@sql12.freesqldatabase.com:3306/sql12751805"  # Ganti dengan kredensial database Anda
 DATABASE_URL = "postgresql://root:lh1wLWLJAMjZKKmQ4iLTyxVdRlEOaLaC@dpg-cte5c5tds78s739j1u30-a.oregon-postgres.render.com/profiling_students"
@@ -14,10 +15,6 @@ engine = create_engine(DATABASE_URL)
 
 graduation_model = joblib.load('student_graduation_model.pkl')
 achievement_model = joblib.load('student_achievement_model.pkl')
-
-# def convert_grade_to_score(grade):
-#     grade_dict = {'A': 4.0, 'B': 3.0, 'C': 2.0, 'D': 1.0, 'E': 0.0}
-#     return grade_dict.get(grade, None)
 
 def get_student_data(npm):
     try:
