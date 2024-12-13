@@ -45,7 +45,7 @@ def get_student_data(npm):
                 FROM data_mahasiswa m
                 WHERE m.npm_mahasiswa = :npm
             """)
-            result = connection.execute(student_query, {"npm": str(npm)}).fetchone()
+            result = connection.execute(student_query, {"npm": npm}).fetchone()
             
             if result:
                 return dict(result._mapping)
@@ -63,11 +63,11 @@ def predict_student_status():
             return jsonify({"error": "npm_mahasiswa wajib diisi"}), 400
 
         # Validasi NPM sebagai angka
-        try:
-            npm = int(npm)
-        except ValueError:
-            return jsonify({"error": "npm_mahasiswa harus berupa angka"}), 400
-
+        # try:
+        #     npm = int(npm)
+        # except ValueError:
+        #     return jsonify({"error": "npm_mahasiswa harus berupa angka"}), 400
+        npm = str(npm)
         # Ambil data mahasiswa
         student_data = get_student_data(npm)
         if not student_data:
