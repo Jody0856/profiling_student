@@ -45,7 +45,7 @@ def get_student_data(npm):
                 FROM data_mahasiswa m
                 WHERE m.npm_mahasiswa = :npm
             """)
-            result = connection.execute(student_query, {"npm": npm}).fetchone()
+            result = connection.execute(student_query, {"npm": str(npm)}).fetchone()
             
             if result:
                 return dict(result._mapping)
