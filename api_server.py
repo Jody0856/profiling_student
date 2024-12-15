@@ -7,16 +7,21 @@ from flask_cors import CORS
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
-import psycopg2
 import nltk
+import os
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('punkt_tab')
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://profiler-student-frontend.vercel.app"]}})
 
-#DATABASE_URL = "mysql+pymysql://root:@localhost:3306/profiling_students"
-DATABASE_URL = "postgresql://root:lh1wLWLJAMjZKKmQ4iLTyxVdRlEOaLaC@dpg-cte5c5tds78s739j1u30-a.oregon-postgres.render.com/profiling_students"
+DATABASE_LOCAL = "mysql+pymysql://root:@localhost:3306/profiling_students" ##Untuk Lokal
+#DATABASE_SERVER = "postgresql://root:lh1wLWLJAMjZKKmQ4iLTyxVdRlEOaLaC@dpg-cte5c5tds78s739j1u30-a.oregon-postgres.render.com/profiling_students" ##untuk server
+
+# Use PostgreSQL for the server and MySQL for local development
+# Dynamically select database URL
+DATABASE_URL = os.getenv("DATABASE_URL", DATABASE_LOCAL)
+
 engine = create_engine(DATABASE_URL)
 
 try:
