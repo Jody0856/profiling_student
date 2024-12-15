@@ -15,6 +15,11 @@ CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://profi
 DATABASE_URL = "postgresql://root:lh1wLWLJAMjZKKmQ4iLTyxVdRlEOaLaC@dpg-cte5c5tds78s739j1u30-a.oregon-postgres.render.com/profiling_students"
 engine = create_engine(DATABASE_URL)
 
+try:
+    with engine.connect() as connection:
+        print("Connected to database successfully!")
+except Exception as e:
+    print(f"Error: {e}")
 # Load models
 graduation_model = joblib.load('student_graduation_model.pkl')
 achievement_model = joblib.load('student_achievement_model.pkl')
