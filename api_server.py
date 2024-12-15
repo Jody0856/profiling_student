@@ -80,6 +80,43 @@ def preprocess_text(text):
     tokens = [stemmer.stem(word) for word in tokens]
     return " ".join(tokens)
 
+@app.route("/students", methods=["GET"])
+def list_students():
+    """
+    Mengembalikan daftar semua mahasiswa yang tersimpan di database.
+    """
+    try:
+        # Membuka koneksi
+        with engine.connect() as connection:
+            query = text("""
+                SELECT npm_mahasiswa, nama_mahasiswa, prodi_mahasiswa,status_mahasiswa, ipk_mahasiswa
+                FROM data_mahasiswa where status_mahasiswa not in ('Mahasiswa Asing')
+            """)
+            result = connection.execute(query).mappings()
+
+            # Membentuk daftar mahasiswa dari hasil query
+            students = [
+                {
+                    "npm_mahasiswa": row["npm_mahasiswa"],
+                    "nama_mahasiswa": row["nama_mahasiswa"],
+                    "prodi_mahasiswa": row["prodi_mahasiswa"],
+                    "status_mahasiswa": row["status_mahasiswa"],
+                    "ipk_mahasiswa": row["ipk_mahasiswa"]
+                }
+                for row in result
+            ]
+
+        # Jika tidak ada data mahasiswa
+        if not students:
+            return jsonify({"message": "Tidak ada data mahasiswa"}), 404
+
+        # Mengembalikan hasil dalam format JSON
+        return jsonify({"students": students}), 200
+    
+    except Exception as e:
+        # Penanganan error
+        return jsonify({"error": f"Terjadi kesalahan: {str(e)}"}), 500
+
 @app.route("/predict", methods=["POST"])
 def predict_student_status():
     try:
