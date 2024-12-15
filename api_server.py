@@ -11,7 +11,7 @@ import psycopg2
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
-
+nltk.download('punkt_tab')
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://profiler-student-frontend.vercel.app"]}})
 
