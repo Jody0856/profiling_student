@@ -8,6 +8,10 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 import psycopg2
+import nltk
+nltk.download('stopwords')
+nltk.download('punkt')
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://profiler-student-frontend.vercel.app"]}})
 
