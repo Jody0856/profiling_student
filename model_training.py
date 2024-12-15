@@ -200,12 +200,12 @@ interest_keywords = {
     "blender": "Design",
 
     # Marketing and Business
-    "digital marketing": "Marketing",
-    "seo": "Marketing",
-    "content marketing": "Marketing",
-    "social media marketing": "Marketing",
-    "email marketing": "Marketing",
-    "e-commerce": "Business & Tech",
+    # "digital marketing": "Marketing",
+    # "seo": "Marketing",
+    # "content marketing": "Marketing",
+    # "social media marketing": "Marketing",
+    # "email marketing": "Marketing",
+    #"e-commerce": "Business & Tech",
     "entrepreneurship": "Business & Tech",
     "startup": "Business & Tech",
     "business analytics": "Data Science",
@@ -214,41 +214,41 @@ interest_keywords = {
     "agile": "Project Management",
     "scrum": "Project Management",
     "kanban": "Project Management",
-    "business development": "Business & Tech",
-    "product management": "Business & Tech",
+    #"business development": "Business & Tech",
+    #"product management": "Business & Tech",
     "sales": "Business & Tech",
 
     # Miscellaneous
     "gaming": "Gaming",
     "photography": "Art & Photography",
-    "writing": "Creative Writing",
-    "public speaking": "Communication",
-    "teaching": "Education",
-    "research": "Education",
-    "data entry": "IT",
-    "event management": "Project Management",
-    "volunteering": "Community Service",
-    "sports": "Sports",
-    "fitness": "Health & Wellness",
-    "healthcare": "Health & Wellness",
-    "psychology": "Health & Wellness",
-    "biology": "STEM",
-    "chemistry": "STEM",
-    "physics": "STEM",
-    "mathematics": "STEM",
-    "statistics": "STEM",
-    "economics": "Business & Tech",
-    "law": "Law",
-    "history": "Arts & Humanities",
-    "philosophy": "Arts & Humanities",
-    "music": "Art & Music",
-    "art": "Art & Music",
-    "drawing": "Art & Music",
-    "painting": "Art & Music",
-    "community service": "Community Service",
-    "volunteering": "Community Service",
-    "leadership": "Leadership & Personal Development",
-    "teamwork": "Leadership & Personal Development"
+    # "writing": "Creative Writing",
+    # "public speaking": "Communication",
+    # "teaching": "Education",
+    # "research": "Education",
+    # "data entry": "IT",
+    # "event management": "Project Management",
+    # "volunteering": "Community Service",
+    # "sports": "Sports",
+    # "fitness": "Health & Wellness",
+    # "healthcare": "Health & Wellness",
+    # "psychology": "Health & Wellness",
+    # "biology": "STEM",
+    # "chemistry": "STEM",
+    # "physics": "STEM",
+    # "mathematics": "STEM",
+    # "statistics": "STEM",
+    # "economics": "Business & Tech",
+    # "law": "Law",
+    # "history": "Arts & Humanities",
+    # "philosophy": "Arts & Humanities",
+    # "music": "Art & Music",
+    # "art": "Art & Music",
+    # "drawing": "Art & Music",
+    # "painting": "Art & Music",
+    # "community service": "Community Service",
+    # "volunteering": "Community Service",
+    # "leadership": "Leadership & Personal Development",
+    # "teamwork": "Leadership & Personal Development"
 }
 
 # Text preprocessing
@@ -274,12 +274,12 @@ def assign_label(text):
     matched_labels = [
         label for keyword, label in interest_keywords.items() if keyword in text.lower()
     ]
-    return matched_labels[0] if matched_labels else "Lainnya"
+    return matched_labels[0] if matched_labels else "Others"
 
 def assign_label_with_fallback(text):
     label = assign_label(text)
-    if label == "Lainnya":
-        return "Peminatan Lainnya"
+    if label == "Others":
+        return "Others"
     return label
 
 def train_supervised_model(data_kegiatan_mahasiswa):
@@ -290,7 +290,7 @@ def train_supervised_model(data_kegiatan_mahasiswa):
     data_kegiatan_mahasiswa['interest_label'] = data_kegiatan_mahasiswa['nama_kegiatan'].fillna("").apply(assign_label_with_fallback)
     
     # Filter labeled data
-    labeled_data = data_kegiatan_mahasiswa[data_kegiatan_mahasiswa['interest_label'] != "Lainnya"]
+    labeled_data = data_kegiatan_mahasiswa[data_kegiatan_mahasiswa['interest_label'] != "Others"]
     
     if labeled_data.empty:
         print("No labeled data available for training.")
