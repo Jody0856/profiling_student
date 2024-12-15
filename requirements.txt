@@ -5,5 +5,7 @@ pandas
 scikit-learn
 numpy
 joblib
+openpyxl
 pymysql
 psycopg2
+nltk
