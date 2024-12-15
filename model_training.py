@@ -274,12 +274,12 @@ def assign_label(text):
     matched_labels = [
         label for keyword, label in interest_keywords.items() if keyword in text.lower()
     ]
-    return matched_labels[0] if matched_labels else "Other"
+    return matched_labels[0] if matched_labels else "Lainnya"
 
 def assign_label_with_fallback(text):
     label = assign_label(text)
-    if label == "Other":
-        return "General/Other Interest"
+    if label == "Lainnya":
+        return "Peminatan Lainnya"
     return label
 
 def train_supervised_model(data_kegiatan_mahasiswa):
@@ -290,7 +290,7 @@ def train_supervised_model(data_kegiatan_mahasiswa):
     data_kegiatan_mahasiswa['interest_label'] = data_kegiatan_mahasiswa['nama_kegiatan'].fillna("").apply(assign_label_with_fallback)
     
     # Filter labeled data
-    labeled_data = data_kegiatan_mahasiswa[data_kegiatan_mahasiswa['interest_label'] != "Other"]
+    labeled_data = data_kegiatan_mahasiswa[data_kegiatan_mahasiswa['interest_label'] != "Lainnya"]
     
     if labeled_data.empty:
         print("No labeled data available for training.")
