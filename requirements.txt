@@ -7,5 +7,5 @@ numpy
 joblib
 openpyxl
 pymysql 
-#psycopg2 ##for postgre dependency
+psycopg2 ##for postgre dependency
 nltk
