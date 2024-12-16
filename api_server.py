@@ -194,7 +194,7 @@ def predict_student_status():
 
         # Assign "Other" if no interest has significant dominance
         if count / total_predictions < 0.5:
-            dominant_interest = "Other"
+            dominant_interest = "Belum ada"
 
         # Assign category based on achievement probability
         kategori = 'Memenuhi Standar' if achievement_prob >= 0.5 else 'Butuh Peningkatan'

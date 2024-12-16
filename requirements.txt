@@ -6,6 +6,6 @@ scikit-learn
 numpy
 joblib
 openpyxl
-pymysql
-psycopg2
+pymysql 
+#psycopg2 ##for postgre dependency
 nltk
